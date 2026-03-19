@@ -247,4 +247,27 @@ print(query_engine.query("文中举了哪些例子?"))
 
 - LangChain代码最终得到的输出携带了各种参数，查询相关资料尝试把这些参数过滤掉得到`content`里的具体回答。
 - 修改Langchain代码中`RecursiveCharacterTextSplitter()`的参数`chunk_size`和`chunk_overlap`，观察输出结果有什么变化。
+      # 文本分块 (你可以尝试下面两种不同的组合)
+  print(answer.content)
+
+# 组合 1：切得很碎（容易断章取义）
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=50,       # 每个文本块最多 50 个字符
+    chunk_overlap=0      # 相邻的块完全不重叠
+)
+
+# 组合 2：切得很大（你可以把上面注释掉，用这个试试）
+# text_splitter = RecursiveCharacterTextSplitter(
+#     chunk_size=1000,     # 每个文本块最多 1000 个字符
+#     chunk_overlap=200    # 相邻的块重叠 200 个字符，保证上下文连贯
+# )
+
+chunks = text_splitter.split_documents(docs)
+
+# 💡 核心观察点 1：看看一共切出了多少块
+print(f"【DEBUG】文件被切分成了 {len(chunks)} 个文本块！")
+
+# 💡 核心观察点 2：看看检索出来的到底是什么内容
+# （请把这一行加在 docs_content = ... 之后，answer = ... 之前）
+# print(f"【DEBUG】大模型实际看到的参考资料是：\n{docs_content}\n")
 - 给LlamaIndex代码添加代码注释。
